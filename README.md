@@ -1,6 +1,6 @@
-# LMP Calculator
+# LMP_Toolkit
 
-A Python tool for calculating Locational Marginal Prices (LMPs) using Optimal Power Flow (OPF) analysis. This project provides an easy-to-use interface for running OPF calculations on power system networks defined in Matpower format.
+A Python tool that takes a PowerWorld output file and allows users to modify bus-level demand to compute locational marginal prices (LMPs) using optimal power flow (OPF) analysis, enabling fast and computationally efficient evaluation of how prices change across scenarios.
 
 ## Features
 
@@ -11,25 +11,17 @@ A Python tool for calculating Locational Marginal Prices (LMPs) using Optimal Po
 - **Flexible Configuration**: Modify loads at specific buses using absolute values or deltas
 - **Automatic Output**: Results are saved to text files with descriptive names
 
-## Installation
-
-### Prerequisites
-
-- Python 3.7 or higher
-- pip (Python package manager)
 
 ### Setup
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/LMP_Calc.git
-cd LMP_Calc
-```
-
-2. Install required dependencies:
-```bash
+git clone https://github.com/wcolglazier/LMP_Toolkit.git
+cd LMP_Toolkit
 pip install -r requirements.txt
 ```
+
+
 
 ## Usage
 
@@ -101,29 +93,9 @@ Each output file contains:
 - Load configuration for the scenario
 - LMP values ($/MWh) for each bus in the system
 
-## Project Structure
 
-```
-LMP_Calc/
-├── data.m              # Matpower case file (input)
-├── single.py           # Single OPF analysis script
-├── multiple.py         # Multiple load scenario analysis script
-├── opf/
-│   ├── __init__.py
-│   ├── helper.py       # High-level helper functions
-│   ├── parser.py       # Matpower file parser
-│   └── solver.py       # OPF solver using PyPower
-├── requirements.txt    # Python dependencies
-└── README.md          # This file
-```
 
-## Dependencies
 
-- **numpy**: Numerical computations
-- **pandas**: Data manipulation and analysis
-- **pypower**: Optimal power flow solver
-
-See `requirements.txt` for specific versions.
 
 ## Input File Format
 
@@ -133,38 +105,5 @@ The tool expects Matpower case files (`.m` format) containing:
 - Branch data (transmission line parameters)
 - Generator cost data
 
-Example structure:
-```matlab
-mpc.baseMVA = 100.00;
-mpc.bus = [...];
-mpc.gen = [...];
-mpc.gencost = [...];
-mpc.branch = [...];
-```
-
-## How It Works
-
-1. **Parsing**: The `parser.py` module reads and parses Matpower case files
-2. **Load Modification**: Loads at specified buses are modified according to your configuration
-3. **OPF Solution**: PyPower's `runopf` function solves the optimal power flow problem
-4. **Results Extraction**: LMPs and other bus quantities are extracted from the solution
-5. **Output**: Results are formatted and saved to text files
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is open source and available for use and modification. Please check the license file for details.
-
-## Acknowledgments
-
-- Built using [PyPower](https://github.com/rwl/PYPOWER), a Python port of MATPOWER
-- Inspired by power system economics and locational marginal pricing analysis
-
-## Support
-
-If you encounter any issues or have questions, please open an issue on the GitHub repository.
 
 
