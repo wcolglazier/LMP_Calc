@@ -1,0 +1,84 @@
+Base Load Values:
+========================================
+Bus 2: 25.00 MW
+Bus 3: 28.00 MW
+Bus 4: 35.00 MW
+Bus 5: 70.00 MW
+========================================
+
+Loads: Bus 3: 20.00 MW, Bus 5: 40.00 MW
+Bus 1: $6.61/MWh
+Bus 2: $6.89/MWh
+Bus 3: $7.08/MWh
+Bus 4: $7.13/MWh
+Bus 5: $7.16/MWh
+
+Loads: Bus 3: 21.00 MW, Bus 5: 41.00 MW
+Bus 1: $6.62/MWh
+Bus 2: $6.91/MWh
+Bus 3: $7.10/MWh
+Bus 4: $7.15/MWh
+Bus 5: $7.18/MWh
+
+Loads: Bus 3: 22.00 MW, Bus 5: 42.00 MW
+Bus 1: $6.64/MWh
+Bus 2: $6.93/MWh
+Bus 3: $7.12/MWh
+Bus 4: $7.17/MWh
+Bus 5: $7.21/MWh
+
+Loads: Bus 3: 23.00 MW, Bus 5: 43.00 MW
+Bus 1: $6.65/MWh
+Bus 2: $6.95/MWh
+Bus 3: $7.14/MWh
+Bus 4: $7.19/MWh
+Bus 5: $7.23/MWh
+
+Loads: Bus 3: 24.00 MW, Bus 5: 44.00 MW
+Bus 1: $6.67/MWh
+Bus 2: $6.96/MWh
+Bus 3: $7.16/MWh
+Bus 4: $7.21/MWh
+Bus 5: $7.26/MWh
+
+Loads: Bus 3: 25.00 MW, Bus 5: 45.00 MW
+Bus 1: $6.68/MWh
+Bus 2: $6.98/MWh
+Bus 3: $7.18/MWh
+Bus 4: $7.23/MWh
+Bus 5: $7.28/MWh
+
+Loads: Bus 3: 26.00 MW, Bus 5: 46.00 MW
+Bus 1: $6.70/MWh
+Bus 2: $7.00/MWh
+Bus 3: $7.19/MWh
+Bus 4: $7.25/MWh
+Bus 5: $7.31/MWh
+
+Loads: Bus 3: 27.00 MW, Bus 5: 47.00 MW
+Bus 1: $6.71/MWh
+Bus 2: $7.01/MWh
+Bus 3: $7.21/MWh
+Bus 4: $7.27/MWh
+Bus 5: $7.33/MWh
+
+Loads: Bus 3: 28.00 MW, Bus 5: 48.00 MW
+Bus 1: $6.73/MWh
+Bus 2: $7.03/MWh
+Bus 3: $7.23/MWh
+Bus 4: $7.29/MWh
+Bus 5: $7.35/MWh
+
+Loads: Bus 3: 29.00 MW, Bus 5: 49.00 MW
+Bus 1: $6.74/MWh
+Bus 2: $7.05/MWh
+Bus 3: $7.25/MWh
+Bus 4: $7.31/MWh
+Bus 5: $7.38/MWh
+
+Loads: Bus 3: 30.00 MW, Bus 5: 50.00 MW
+Bus 1: $6.76/MWh
+Bus 2: $7.06/MWh
+Bus 3: $7.27/MWh
+Bus 4: $7.33/MWh
+Bus 5: $7.40/MWh

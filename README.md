@@ -20,25 +20,11 @@ cd LMP_Toolkit
 pip install -r requirements.txt
 ```
 
-## Usage
+## How to Use
 
 ### Single OPF Analysis
 
-Run a single OPF calculation with specific load values:
-
-```python
-from opf.helper import run_opf_single, print_current_loads
-
-# Print current loads in the system
-print_current_loads(file_path="data.m")
-
-# Run OPF with specific load values
-bus_numbers = [5, 3]
-new_loads = [60.0, 55.0]
-run_opf_single(bus_numbers_abs=bus_numbers, new_loads_abs=new_loads, file_path="data.m")
-```
-
-Or modify the `single.py` file directly:
+**Step 1:** Open `single.py` and set your configuration:
 
 ```python
 from opf.helper import get_current_load, run_opf_single, print_current_loads
@@ -48,54 +34,84 @@ file_name = "data.m"
 # Print current loads
 print_current_loads(file_path=file_name)
 
-# Configuration
-bus_numbers_abs = [5, 3]
-new_loads_abs = [60.0, 55.0]
+# Configuration - modify these values
+bus_numbers_abs = [5, 3]        # Bus numbers to modify
+new_loads_abs = [60.0, 55.0]   # New load values in MW
+
+# Set to False to skip saving results to TXT file
+save_to_file = True
 
 # Run OPF
-run_opf_single(file_path=file_name)
+run_opf_single(file_path=file_name, save_to_file=save_to_file)
+```
+
+**Step 2:** Run the script:
+```bash
+python single.py
+```
+
+**Step 3:** Results are printed to the console and saved to a text file (e.g., `opf_single_b5_60MW_b3_55MW.txt`) containing LMP values for all buses. Set `save_to_file = False` to only print results without saving to a file.
+
+**Alternative:** You can also use absolute or delta-based changes programmatically:
+```python
+from opf.helper import run_opf_single
+
+# Absolute load values
+run_opf_single(bus_numbers_abs=[5, 3], new_loads_abs=[60.0, 55.0], file_path="data.m", save_to_file=True)
+
+# Delta changes (add/subtract from current load)
+run_opf_single(bus_numbers_delta=[5], delta_changes=[10.0], file_path="data.m", save_to_file=False)
 ```
 
 ### Multiple Load Scenarios
 
-Run OPF calculations across a range of load values:
+**Step 1:** Open `multiple.py` and configure your load ranges:
 
 ```python
-from opf.helper import run_opf_loop, print_current_loads
+from opf.helper import print_current_loads, run_opf_loop
 
 data_file = "data.m"
 
 # Print current loads
 print_current_loads(file_path=data_file)
 
-# Configuration
-bus_numbers = [5, 3]
-load_starts = [40.0, 20.0]      # Starting load values (MW)
-load_ends = [50.0, 30.0]        # Ending load values (MW)
-load_step_sizes = [1.0, 1.0]    # Step size for each bus (MW)
+# Configuration - modify these values
+bus_numbers = [5, 3]                    # Buses to modify
+load_starts = [40.0, 20.0]              # Starting load values (MW)
+load_ends = [50.0, 30.0]                # Ending load values (MW)
+load_step_sizes = [1.0, 1.0]            # Step size for each bus (MW)
+
+# Set to False to skip saving results to TXT file
+save_to_file = False
 
 # Run loop
-run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path=data_file)
+run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path=data_file, save_to_file=save_to_file)
 ```
 
-Or modify the `multiple.py` file directly with your desired configuration.
+**Step 2:** Run the script:
+```bash
+python multiple.py
+```
 
-### Output
+**Step 3:** Results are printed to the console for each scenario. If `save_to_file = True`, results are also saved to a single text file (e.g., `opf_multiple_b5_40to50MW_b3_20to30MW.txt`) with all scenarios and their corresponding LMP values, including base load values at the top of the file.
 
-Results are automatically saved to text files:
+### Output Files
 
-- Single runs: `opf_single_b{bus}_{load}MW.txt` or `opf_single_basecase.txt`
-- Multiple runs: `opf_loop_b{bus}_{start}to{end}MW.txt`
+Results are printed to the console by default. When `save_to_file = True`, results are also saved to text files in the project directory:
+
+- **Single runs:** `opf_single_b{bus}_{load}MW.txt` or `opf_single_basecase.txt` for base case
+- **Multiple runs:** `opf_multiple_b{bus}_{start}to{end}MW.txt`
 
 Each output file contains:
-
-- Load configuration for the scenario
+- **Multiple runs:** Base load values from the original case file at the top
+- Load configuration for each scenario
 - LMP values ($/MWh) for each bus in the system
 
-## Input File Format
+Set `save_to_file = False` in your script to skip file creation and only print results to the console.
 
-The tool expects Matpower case files (`.m` format) containing:
+### Input File Format
 
+The tool expects Matpower case files (`.m` format) exported from PowerWorld, containing:
 - Bus data (bus numbers, types, loads, voltages)
 - Generator data (generation limits, costs)
 - Branch data (transmission line parameters)

@@ -20,9 +20,18 @@ def get_current_load(bus_num, file_path="data.m"):
         return mpc['bus'][bus_indices[0], 2]
     return None
 
+def get_base_loads(file_path="data.m"):
+    """Get base load values from the case file."""
+    mpc = get_case(file_path)
+    base_loads = []
+    for bus in mpc['bus']:
+        if bus[2] > 0:
+            base_loads.append((int(bus[0]), bus[2]))
+    return base_loads
+
 def print_current_loads(file_path="data.m"):
     mpc = get_case(file_path)
-    print("Current Load Values:")
+    print("Base Load Values:")
     print("=" * 40)
     for bus in mpc['bus']:
         if bus[2] > 0:
@@ -38,20 +47,37 @@ def run_opf_with_loads(load_changes, file_path="data.m"):
             modify_load_mpc(mpc, bus_num=bus_num, new_load_mw=new_load)
         return run_opf_matpower(mpc)
 
-def save_lmps(results, filename, load_changes=None):
-    with open(filename, 'w') as f:
-        if load_changes:
-            loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(load_changes.items())])
-            header = f"Loads: {loads_str}"
-            print(header)
-            f.write(header + '\n')
-        
-        for _, row in results.iterrows():
-            line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
-            print(line)
-            f.write(line + '\n')
+def save_lmps(results, filename, load_changes=None, save_to_file=True, base_loads=None, file_path="data.m"):
+    if base_loads is None:
+        base_loads = get_base_loads(file_path)
+    
+    header = None
+    if load_changes:
+        loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(load_changes.items())])
+        header = f"Loads: {loads_str}"
+        print(header)
+    
+    for _, row in results.iterrows():
+        line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
+        print(line)
+    
+    if save_to_file:
+        with open(filename, 'w') as f:
+            # Write base load values
+            f.write("Base Load Values:\n")
+            f.write("=" * 40 + "\n")
+            for bus_num, load in base_loads:
+                f.write(f"Bus {bus_num}: {load:.2f} MW\n")
+            f.write("=" * 40 + "\n")
+            f.write("\n")
+            
+            if header:
+                f.write(header + '\n')
+            for _, row in results.iterrows():
+                line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
+                f.write(line + '\n')
 
-def run_opf_single(bus_numbers_abs=None, new_loads_abs=None, bus_numbers_delta=None, delta_changes=None, file_path="data.m", output_file=None):
+def run_opf_single(bus_numbers_abs=None, new_loads_abs=None, bus_numbers_delta=None, delta_changes=None, file_path="data.m", output_file=None, save_to_file=True):
     frame = inspect.currentframe().f_back
     caller_locals = frame.f_locals if frame else {}
     
@@ -87,10 +113,10 @@ def run_opf_single(bus_numbers_abs=None, new_loads_abs=None, bus_numbers_delta=N
         return None
     
     results, _ = result
-    save_lmps(results, output_file, load_changes)
+    save_lmps(results, output_file, load_changes, save_to_file=save_to_file, file_path=file_path)
     return results
 
-def run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path="data.m", output_file=None):
+def run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path="data.m", output_file=None, save_to_file=True):
     load_ranges = [
         np.arange(load_starts[i], load_ends[i] + load_step_sizes[i], load_step_sizes[i])
         for i in range(len(bus_numbers))
@@ -101,7 +127,7 @@ def run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path
         range_desc = "_".join(
             [f"b{b}_{int(s)}to{int(e)}MW" for b, s, e in zip(bus_numbers, load_starts, load_ends)]
         )
-        output_file = f"opf_loop_{range_desc}.txt"
+        output_file = f"opf_multiple_{range_desc}.txt"
     
     all_results = []
     for i in range(max_len):
@@ -115,17 +141,34 @@ def run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path
             results, _ = result
             all_results.append({'load_changes': load_changes, 'results': results})
     
-    with open(output_file, 'w') as f:
-        for idx, iteration in enumerate(all_results):
-            loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(iteration['load_changes'].items())])
-            header = f"Loads: {loads_str}"
-            print(f"\n{header}" if idx > 0 else header)
-            f.write(('\n' if idx > 0 else '') + header + '\n')
+    for idx, iteration in enumerate(all_results):
+        loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(iteration['load_changes'].items())])
+        header = f"Loads: {loads_str}"
+        print(f"\n{header}" if idx > 0 else header)
+        
+        for _, row in iteration['results'].iterrows():
+            line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
+            print(line)
+    
+    if save_to_file:
+        base_loads = get_base_loads(file_path)
+        with open(output_file, 'w') as f:
+            # Write base load values at the top
+            f.write("Base Load Values:\n")
+            f.write("=" * 40 + "\n")
+            for bus_num, load in base_loads:
+                f.write(f"Bus {bus_num}: {load:.2f} MW\n")
+            f.write("=" * 40 + "\n")
+            f.write("\n")
             
-            for _, row in iteration['results'].iterrows():
-                line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
-                print(line)
-                f.write(line + '\n')
+            for idx, iteration in enumerate(all_results):
+                loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(iteration['load_changes'].items())])
+                header = f"Loads: {loads_str}"
+                f.write(('\n' if idx > 0 else '') + header + '\n')
+                
+                for _, row in iteration['results'].iterrows():
+                    line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
+                    f.write(line + '\n')
     
     return all_results
 
