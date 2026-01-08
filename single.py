@@ -10,7 +10,8 @@ print_current_loads(file_path=file_name)
 bus_numbers_abs = [5, 3]
 new_loads_abs = [60.0, 55.0]
 
-# Set to False to skip saving results to TXT file
+# Set to True to save results to .txt 
+# Set to False to not save results
 save_to_file = True
 
 # Run OPF (base case if variables are commented out)

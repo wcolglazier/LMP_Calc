@@ -1,6 +1,6 @@
 # LMP_Toolkit
 
-A Python tool that takes a PowerWorld output file and allows users to modify bus-level demand to compute locational marginal prices (LMPs) using optimal power flow (OPF) analysis, enabling fast and computationally efficient evaluation of how prices change across scenarios.
+A Python tool that takes a PowerWorld output file and allows users to modify bus-level demand to compute locational marginal prices (LMPs) using optimal power flow (OPF) analysis, enabling fast and computationally efficient evaluation of how prices change across scenarios. The output can also be used for easy integration into machine learning workflows or other types of models.
 
 ## Features
 
@@ -20,7 +20,13 @@ cd LMP_Toolkit
 pip install -r requirements.txt
 ```
 
+
 ## How to Use
+
+### Input File Format
+
+The tool expects Matpower case files (`.m` format) exported from PowerWorld Simulator. Export your case file in Matpower format and place it in the project directory. The default filename is `data.m`, but you can specify any filename in your scripts.
+
 
 ### Single OPF Analysis
 
@@ -38,7 +44,8 @@ print_current_loads(file_path=file_name)
 bus_numbers_abs = [5, 3]        # Bus numbers to modify
 new_loads_abs = [60.0, 55.0]   # New load values in MW
 
-# Set to False to skip saving results to TXT file
+# Set to True to save results to .txt 
+# Set to False to not save results
 save_to_file = True
 
 # Run OPF
@@ -50,18 +57,6 @@ run_opf_single(file_path=file_name, save_to_file=save_to_file)
 python single.py
 ```
 
-**Step 3:** Results are printed to the console and saved to a text file (e.g., `opf_single_b5_60MW_b3_55MW.txt`) containing LMP values for all buses. Set `save_to_file = False` to only print results without saving to a file.
-
-**Alternative:** You can also use absolute or delta-based changes programmatically:
-```python
-from opf.helper import run_opf_single
-
-# Absolute load values
-run_opf_single(bus_numbers_abs=[5, 3], new_loads_abs=[60.0, 55.0], file_path="data.m", save_to_file=True)
-
-# Delta changes (add/subtract from current load)
-run_opf_single(bus_numbers_delta=[5], delta_changes=[10.0], file_path="data.m", save_to_file=False)
-```
 
 ### Multiple Load Scenarios
 
@@ -81,7 +76,8 @@ load_starts = [40.0, 20.0]              # Starting load values (MW)
 load_ends = [50.0, 30.0]                # Ending load values (MW)
 load_step_sizes = [1.0, 1.0]            # Step size for each bus (MW)
 
-# Set to False to skip saving results to TXT file
+# Set to True to save results to .txt 
+# Set to False to not save results
 save_to_file = False
 
 # Run loop
@@ -93,26 +89,55 @@ run_opf_loop(bus_numbers, load_starts, load_ends, load_step_sizes, file_path=dat
 python multiple.py
 ```
 
-**Step 3:** Results are printed to the console for each scenario. If `save_to_file = True`, results are also saved to a single text file (e.g., `opf_multiple_b5_40to50MW_b3_20to30MW.txt`) with all scenarios and their corresponding LMP values, including base load values at the top of the file.
+## Example Outputs
 
-### Output Files
+### Single OPF Analysis Output
 
-Results are printed to the console by default. When `save_to_file = True`, results are also saved to text files in the project directory:
 
-- **Single runs:** `opf_single_b{bus}_{load}MW.txt` or `opf_single_basecase.txt` for base case
-- **Multiple runs:** `opf_multiple_b{bus}_{start}to{end}MW.txt`
+**Console/File Output:**
+```text
+Loads: Bus 3: 55.00 MW, Bus 5: 60.00 MW
+Bus 1: $6.75/MWh
+Bus 2: $7.05/MWh
+Bus 3: $7.25/MWh
+Bus 4: $7.31/MWh
+Bus 5: $7.38/MWh
+```
 
-Each output file contains:
-- **Multiple runs:** Base load values from the original case file at the top
-- Load configuration for each scenario
-- LMP values ($/MWh) for each bus in the system
 
-Set `save_to_file = False` in your script to skip file creation and only print results to the console.
 
-### Input File Format
+### Multiple Load Scenarios Output
 
-The tool expects Matpower case files (`.m` format) exported from PowerWorld, containing:
-- Bus data (bus numbers, types, loads, voltages)
-- Generator data (generation limits, costs)
-- Branch data (transmission line parameters)
-- Generator cost data
+**Console/File Output:**
+```text
+Base Load Values:
+========================================
+Bus 2: 25.00 MW
+Bus 3: 28.00 MW
+Bus 4: 35.00 MW
+Bus 5: 70.00 MW
+========================================
+
+Loads: Bus 3: 20.00 MW, Bus 5: 40.00 MW
+Bus 1: $6.61/MWh
+Bus 2: $6.89/MWh
+Bus 3: $7.08/MWh
+Bus 4: $7.13/MWh
+Bus 5: $7.16/MWh
+
+Loads: Bus 3: 21.00 MW, Bus 5: 41.00 MW
+Bus 1: $6.62/MWh
+Bus 2: $6.91/MWh
+Bus 3: $7.10/MWh
+Bus 4: $7.15/MWh
+Bus 5: $7.18/MWh
+
+Loads: Bus 3: 22.00 MW, Bus 5: 42.00 MW
+Bus 1: $6.64/MWh
+Bus 2: $6.93/MWh
+Bus 3: $7.12/MWh
+Bus 4: $7.17/MWh
+Bus 5: $7.21/MWh
+...
+```
+

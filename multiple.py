@@ -11,7 +11,8 @@ load_starts = [40.0, 20.0]
 load_ends = [50.0, 30.0]
 load_step_sizes = [1.0, 1.0]
 
-# Set to False to skip saving results to TXT file
+# Set to True to save results to .txt 
+# Set to False to not save results
 save_to_file = False
 
 # Run loop (output file name will encode bus and range)
