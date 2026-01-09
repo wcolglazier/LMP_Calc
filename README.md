@@ -6,20 +6,29 @@ The tool allows users to modify electricity demand at individual buses and evalu
 
 The resulting outputs are structured text files that are easy to parse and well suited for:
 
-- Data analysis
-- Sensitivity studies
-- Machine learning pipelines
-- Other downstream modeling workflows
+Data analysis
+Sensitivity studies
+Machine learning workflows
 
 ## Features
 
-### Single OPF Analysis
+1. **Single OPF Analysis**
 
-Run optimal power flow calculations for specific load scenarios to determine locational marginal prices (LMPs) at each bus. Modify loads at specific buses using absolute values or incremental changes from the base case. Results include LMPs, voltages, angles, and power flows for all buses, automatically saved to text files. Ideal for analyzing "what-if" scenarios and evaluating the impact of load changes at specific locations.
+Run an OPF for a specific load configuration to answer targeted "what-if" questions.
 
-### Multiple Load Scenarios
+- Modify load at one or more buses (absolute values or incremental changes)
+- Compute locational marginal prices (LMPs) across all buses
+- Results are printed to the console and optionally saved to text files
 
-Automatically iterate through ranges of load values to analyze LMP sensitivity and create pricing curves. Define independent load ranges and step sizes for multiple buses simultaneously, with batch processing that runs OPF calculations across all combinations. All scenarios are saved in a consolidated output file for easy comparison. Perfect for creating LMP vs. load curves, identifying critical pricing thresholds, and analyzing transmission congestion patterns.
+2. **Multiple Load Scenarios (Batch Mode)**
+
+Automatically sweep across many load configurations to study price sensitivity.
+
+- Define load ranges and step sizes for multiple buses
+- Run OPF across all combinations of specified load values
+- Analyze how LMPs change as bus-level load varies
+- Consolidated output for easy post-processing
+- Designed for fast, repeatable scenario sweeps and dataset generation
 
 ## Setup
 
@@ -34,7 +43,7 @@ pip install -r requirements.txt
 
 ### Input File Format
 
-The tool expects Matpower case files (`.m` format) exported from PowerWorld Simulator. Export your case file in Matpower format and place it in the project directory. The default filename is `data.m`, but you can specify any filename in your scripts.
+The tool expects MATPOWER format (.m) case files exported from PowerWorld Simulator.
 
 
 ### Single OPF Analysis
