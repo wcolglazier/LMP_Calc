@@ -1,6 +1,14 @@
 # LMP_Toolkit
 
-A Python tool that takes a PowerWorld output file and allows users to modify bus-level demand to compute locational marginal prices (LMPs) using optimal power flow (OPF) analysis, enabling fast and computationally efficient evaluation of how prices change across scenarios. The output can also be used for easy integration into machine learning workflows or other types of models.
+LMP_Toolkit is a Python-based tool for efficiently computing Locational Marginal Prices (LMPs) from power system models exported from PowerWorld Simulator.
+
+The tool allows users to modify electricity demand at individual buses and evaluate how LMPs change in response, using (approximate) Optimal Power Flow (OPF) analysis. Instead of manually running a single OPF case, LMP_Toolkit is designed for large scale scenario analysis, making it easy to run many load variations quickly and consistently.
+
+The resulting outputs are structured text files that are easy to parse and well-suited for:
+
+Data analysis
+Sensitivity studies
+Machine learning workflows
 
 ## Features
 
