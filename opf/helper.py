@@ -51,8 +51,11 @@ def save_lmps(results, filename, load_changes=None, save_to_file=True, base_load
     if base_loads is None:
         base_loads = get_base_loads(file_path)
     
-    header = None
-    if load_changes:
+    # For basecase (no load changes), show base loads. For modified loads, show "Loads:" line
+    is_basecase = not load_changes or len(load_changes) == 0
+    
+    # Only print "Loads:" line for modified loads, not basecase
+    if not is_basecase:
         loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(load_changes.items())])
         header = f"Loads: {loads_str}"
         print(header)
@@ -63,7 +66,7 @@ def save_lmps(results, filename, load_changes=None, save_to_file=True, base_load
     
     if save_to_file:
         with open(filename, 'w') as f:
-            # Write base load values
+            # Always write base load values to file
             f.write("Base Load Values:\n")
             f.write("=" * 40 + "\n")
             for bus_num, load in base_loads:
@@ -71,8 +74,11 @@ def save_lmps(results, filename, load_changes=None, save_to_file=True, base_load
             f.write("=" * 40 + "\n")
             f.write("\n")
             
-            if header:
-                f.write(header + '\n')
+            # Write "Loads:" line only for modified loads, not basecase
+            if not is_basecase:
+                loads_str = ', '.join([f"Bus {bus}: {load:.2f} MW" for bus, load in sorted(load_changes.items())])
+                f.write(f"Loads: {loads_str}\n")
+            
             for _, row in results.iterrows():
                 line = f"Bus {row['Bus_Number']}: ${row['LMP_$/MWh']:.2f}/MWh"
                 f.write(line + '\n')
@@ -82,9 +88,9 @@ def run_opf_single(bus_numbers_abs=None, new_loads_abs=None, bus_numbers_delta=N
     caller_locals = frame.f_locals if frame else {}
     
     if bus_numbers_abs is None:
-        bus_numbers_abs = caller_locals.get('bus_numbers_abs', [])
+        bus_numbers_abs = caller_locals.get('bus_numbers_abs', caller_locals.get('bus_numbers', []))
     if new_loads_abs is None:
-        new_loads_abs = caller_locals.get('new_loads_abs', [])
+        new_loads_abs = caller_locals.get('new_loads_abs', caller_locals.get('new_loads', []))
     if bus_numbers_delta is None:
         bus_numbers_delta = caller_locals.get('bus_numbers_delta', [])
     if delta_changes is None:

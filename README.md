@@ -96,12 +96,20 @@ python multiple.py
 
 **Console/File Output:**
 ```text
-Loads: Bus 3: 55.00 MW, Bus 5: 60.00 MW
-Bus 1: $6.75/MWh
-Bus 2: $7.05/MWh
-Bus 3: $7.25/MWh
-Bus 4: $7.31/MWh
-Bus 5: $7.38/MWh
+Base Load Values:
+========================================
+Bus 2: 25.00 MW
+Bus 3: 28.00 MW
+Bus 4: 35.00 MW
+Bus 5: 70.00 MW
+========================================
+
+Loads: Bus 3: 55.00 MW, Bus 5: 58.00 MW
+Bus 1: $6.80/MWh
+Bus 2: $7.26/MWh
+Bus 3: $7.67/MWh
+Bus 4: $7.72/MWh
+Bus 5: $7.78/MWh
 ```
 
 
