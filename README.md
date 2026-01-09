@@ -1,20 +1,20 @@
 # LMP_Toolkit
 
-LMP_Toolkit is a Python based tool for efficiently computing Locational Marginal Prices (LMPs) from power system models exported from PowerWorld Simulator.
+**LMP_Toolkit** is a Python based tool for efficiently computing **Locational Marginal Prices (LMPs)** from power system models exported from **PowerWorld Simulator**.
 
-The tool allows users to modify electricity demand at individual buses and evaluate how LMPs change in response, using (approximate) Optimal Power Flow (OPF) analysis. Instead of manually running a single OPF case, LMP_Toolkit is designed for large scale scenario analysis, making it easy to run many load variations quickly and consistently.
+The tool allows users to modify electricity demand at individual buses and evaluate how LMPs change in response, using (approximate) **Optimal Power Flow (OPF)** analysis. Instead of manually running a single OPF case, **LMP_Toolkit** is designed for **large scale scenario analysis**, making it easy to run many load variations quickly and consistently.
 
 The resulting outputs are structured text files that are easy to parse and well suited for:
 
-Data analysis
-Sensitivity studies
-Machine learning workflows
+- Data analysis
+- Sensitivity studies
+- Machine learning workflows
 
 ## Features
 
 1. **Single OPF Analysis**
 
-Run an OPF for a specific load configuration to answer targeted "what-if" questions.
+Run an OPF for a specific load configuration to answer targeted "what if" questions.
 
 - Modify load at one or more buses (absolute values or incremental changes)
 - Compute locational marginal prices (LMPs) across all buses
@@ -26,8 +26,8 @@ Automatically sweep across many load configurations to study price sensitivity.
 
 - Define load ranges and step sizes for multiple buses
 - Run OPF across all combinations of specified load values
-- Analyze how LMPs change as bus-level load varies
-- Consolidated output for easy post-processing
+- Analyze how LMPs change as bus level load varies
+- Consolidated output for easy post processing
 - Designed for fast, repeatable scenario sweeps and dataset generation
 
 ## Setup
